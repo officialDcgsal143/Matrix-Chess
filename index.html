@@ -1,21 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Matrix Chess</title>
-    <!-- Local chessboard CSS -->
-    <link rel="stylesheet" href="chessboardjs-1.0.0/css/chessboard-1.0.0.min.css">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Matrix Chess</title>
+<style>
+  body { font-family: sans-serif; text-align: center; background: #121212; color: #fff; }
+  h2 { margin-top: 10px; }
+  #board { display: grid; grid-template-columns: repeat(8, 60px); grid-template-rows: repeat(8, 60px); margin: 20px auto; }
+  .square { width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; font-size: 36px; cursor: pointer; user-select: none; }
+  .white { background: #f0d9b5; }
+  .black { background: #b58863; }
+  #info { margin-top: 10px; }
+  #evalBar { width: 480px; height: 20px; background: #555; margin: 10px auto; position: relative; }
+  #evalFill { height: 100%; background: #0f0; width: 50%; position: absolute; left: 0; top:0; }
+</style>
 </head>
 <body>
-    <h2 style="text-align:center">Matrix Chess</h2>
-    <div id="board" style="width: 480px; margin: 20px auto"></div>
+<h2>Matrix Chess</h2>
+<div id="board"></div>
+<div id="info">
+  <div>
+    <label>Timer Mode: </label>
+    <select id="timerMode">
+      <option value="global">Global</option>
+      <option value="classic">Classic</option>
+    </select>
+  </div>
+  <div>White: <span id="whiteTime">05:00</span> | Black: <span id="blackTime">05:00</span></div>
+</div>
+<div id="evalBar"><div id="evalFill"></div></div>
+<script>
+const pieces = {
+  r:'♜', n:'♞', b:'♝', q:'♛', k:'♚', p:'♟',
+  R:'♖', N:'♘', B:'♗', Q:'♕', K:'♔', P:'♙'
+};
+let boardState = [
+  ['r','n','b','q','k','b','n','r'],
+  ['p','p','p','p','p','p','p','p'],
+  ['','','','','','','',''],
+  ['','','','','','','',''],
+  ['','','','','','','',''],
+  ['','','','','','','',''],
+  ['P','P','P','P','P','P','P','P'],
+  ['R','N','B','Q','K','B','N','R']
+];
+let turn = 'w';
+let selected = null;
 
-    <!-- chess.js from CDN -->
-    <script src="https://unpkg.com/chess.js@1.0.0/dist/chess.min.js"></script>
-    <!-- local chessboard.js -->
-    <script src="chessboardjs-1.0.0/js/chessboard-1.0.0.min.js"></script>
-    <!-- your script -->
-    <script src="script.js"></script>
+function renderBoard() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+  for(let r=0;r<8;r++){
+    for(let c=0;c<8;c++){
+      const sq = document.createElement('div');
+      sq.className = 'square ' + ((r+c)%2?'white':'black');
+      sq.dataset.row = r; sq.dataset.col = c;
+      sq.textContent = pieces[boardState[r][c]]||'';
+      sq.addEventListener('click', clickSquare);
+      board.appendChild(sq);
+    }
+  }
+}
+
+function clickSquare(e){
+  const r = parseInt(e.currentTarget.dataset.row);
+  const c = parseInt(e.currentTarget.dataset.col);
+  const piece = boardState[r][c];
+  if(selected){
+    if(canMove(selected.r,selected.c,r,c)){
+      boardState[r][c] = boardState[selected.r][selected.c];
+      boardState[selected.r][selected.c] = '';
+      selected = null;
+      turn = turn==='w'?'b':'w';
+      checkGameEnd();
+    } else {
+      selected = null;
+    }
+  } else if(piece && isTurnPiece(piece)){
+    selected = {r,c};
+  }
+  renderBoard();
+}
+
+function isTurnPiece(p){return (turn==='w' && p===p.toUpperCase()) || (turn==='b' && p===p.toLowerCase());}
+
+// SUPER SIMPLE LEGAL MOVE CHECK (just basic piece capture & pawns move)
+// We can expand later for castling/en passant etc
+function canMove(r1,c1,r2,c2){
+  const p = boardState[r1][c1];
+  if(p.toLowerCase()==='p'){ // pawn
+    const dir = p==='P'? -1 : 1;
+    if(c1===c2 && boardState[r2][c2]===''){
+      if(r2===r1+dir) return true;
+      if((r===1 && p==='P')||(r===6 && p==='p')){ // double move
+        if(r2===r1+2*dir && boardState[r1+dir][c1]==='') return true;
+      }
+    }
+    if(Math.abs(c2-c1)===1 && r2===r1+dir && boardState[r2][c2]!=='') return true;
+    return false;
+  }
+  return true; // allow other pieces for now
+}
+
+function checkGameEnd(){
+  // simple evaluation: sum of piece values
+  const values = {p:1,n:3,b:3,r:5,q:9,k:0,P:1,N:3,B:3,R:5,Q:9,K:0};
+  let score=0;
+  for(let r=0;r<8;r++){
+    for(let c=0;c<8;c++){
+      const p=boardState[r][c];
+      if(p) score+= (p===p.toUpperCase()? values[p]: -values[p]);
+    }
+  }
+  const fill = document.getElementById('evalFill');
+  fill.style.width = ((score+39)/78*100)+'%';
+}
+
+renderBoard();
+
+// TIMERS
+let wTime=300, bTime=300; // 5 min each
+let timerMode='global';
+document.getElementById('timerMode').addEventListener('change', e=>timerMode=e.target.value);
+
+function updateTimers(){
+  if(timerMode==='global'){
+    wTime--; bTime--;
+  } else {
+    if(turn==='w') wTime--; else bTime--;
+  }
+  document.getElementById('whiteTime').textContent=formatTime(wTime);
+  document.getElementById('blackTime').textContent=formatTime(bTime);
+  if(wTime<=0 || bTime<=0) alert('Time Up!'); // show eval already
+}
+
+function formatTime(s){
+  const m=Math.floor(s/60); const sec=s%60;
+  return `${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+}
+
+setInterval(updateTimers,1000);
+</script>
 </body>
 </html>
