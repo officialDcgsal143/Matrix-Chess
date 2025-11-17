@@ -1,34 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Tournament Chess</title>
-<link rel="stylesheet" href="chessboardjs-1.0.0/js/chessboard-1.0.0.css">
-<link rel="stylesheet" href="style.css">
-
-<script src=""></script>
-<script src="chessboardjs-1.0.0/js/chessboard-1.0.0.js"></script>
-<script src="script.js"></script>
-
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Matrix Chess Tournament</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
 </head>
 <body>
-<h1>Tournament Chess</h1>
+  <h1>Matrix Chess Tournament</h1>
+  
+  <div id="board" style="width: 480px"></div>
+  
+  <div class="info">
+    <div>White Timer: <span id="white-timer">05:00</span></div>
+    <div>Black Timer: <span id="black-timer">05:00</span></div>
+    <div id="eval-bar-container" style="display:none;">
+      <div id="eval-bar"></div>
+    </div>
+    <button id="start-global">Start Global Timer</button>
+    <button id="start-classic">Start Classic Timer</button>
+  </div>
 
-<div id="board" style="width: 400px; margin:auto"></div>
-
-<div id="timers">
-  <span id="whiteTimer">05:00</span> | <span id="blackTimer">05:00</span>
-</div>
-
-<select id="timerMode">
-  <option value="classic">Classic</option>
-  <option value="global">Global</option>
-</select>
-
-<button onclick="resetGame()">Reset Game</button>
-
-
-<script src="script.js"></script>
+  <script src="https://unpkg.com/chess.js@1.0.0/dist/chess.min.js"></script>
+  <script src="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
