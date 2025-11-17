@@ -1,29 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Matrix Chess Tournament</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+    <meta charset="UTF-8">
+    <title>Matrix Chess</title>
+    <!-- Local chessboard CSS -->
+    <link rel="stylesheet" href="chessboardjs-1.0.0/css/chessboard-1.0.0.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <script src="https://unpkg.com/chess.js@1.0.0/dist/chess.min.js"></script>
-  <script src="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
-  <script src="script.js"></script>
-  <h1>Matrix Chess Tournament</h1>
-  
-  <div id="board" style="width: 480px"></div>
-  
-  <div class="info">
-    <div>White Timer: <span id="white-timer">05:00</span></div>
-    <div>Black Timer: <span id="black-timer">05:00</span></div>
-    <div id="eval-bar-container" style="display:none;">
-      <div id="eval-bar"></div>
-    </div>
-    <button id="start-global">Start Global Timer</button>
-    <button id="start-classic">Start Classic Timer</button>
-  </div>
+    <h2 style="text-align:center">Matrix Chess</h2>
+    <div id="board" style="width: 480px; margin: 20px auto"></div>
 
-  
+    <!-- chess.js from CDN -->
+    <script src="https://unpkg.com/chess.js@1.0.0/dist/chess.min.js"></script>
+    <!-- local chessboard.js -->
+    <script src="chessboardjs-1.0.0/js/chessboard-1.0.0.min.js"></script>
+    <!-- your script -->
+    <script src="script.js"></script>
 </body>
 </html>
