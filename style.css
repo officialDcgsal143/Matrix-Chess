@@ -1,0 +1,5 @@
+body { font-family: sans-serif; text-align: center; background: #f5f5f5; }
+#board { margin-top: 20px; }
+#timers { font-size: 24px; margin: 10px; }
+button { margin-top: 10px; padding: 5px 10px; font-size: 16px; cursor:pointer; }
+#evalBar { font-size: 20px; color: red; }

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tournament Chess</title>
+<link rel="stylesheet" href="chessboardjs-1.0.0/js/chessboard-1.0.0.css">
+<link rel="stylesheet" href="style.css">
+
+<script src=""></script>
+<script src="chessboardjs-1.0.0/js/chessboard-1.0.0.js"></script>
+<script src="script.js"></script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Tournament Chess</h1>
+
+<div id="board" style="width: 400px; margin:auto"></div>
+
+<div id="timers">
+  <span id="whiteTimer">05:00</span> | <span id="blackTimer">05:00</span>
+</div>
+
+<select id="timerMode">
+  <option value="classic">Classic</option>
+  <option value="global">Global</option>
+</select>
+
+<button onclick="resetGame()">Reset Game</button>
+
+
+<script src="script.js"></script>
+</body>
+</html>
